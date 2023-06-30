@@ -5,6 +5,8 @@ const helmet = require('helmet');
 const morgan = require('morgan');
 const app = express();
 const server = require('http').createServer(app);
+
+// Handle cross orgin
 const io = require('socket.io')(server,{
         cors: {
           origin: "http://localhost:4200",
@@ -15,16 +17,20 @@ const io = require('socket.io')(server,{
 app.get('/', (req, res) => {
     res.send('Hello from Codedamn');
 })
-
-
+const userArray = {}
+//  socket connection 
 io.on('connection', (socket) => {
   console.log('New client connected');
+  console.log('connected user id',socket.id)
 
+  // userArray.push(socket.id)
+  // message handler
   socket.on('signal', (data) => {
     console.log('Signal received:', data);
     socket.broadcast.emit('signal', data);
   });
 
+  // user disconnet
   socket.on('disconnect', () => {
     console.log('Client disconnected');
   });
